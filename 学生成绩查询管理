@@ -1,0 +1,301 @@
+#include <iostream>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+using namespace std;
+#define vivo sizeof(struct chen)
+
+
+struct chen
+{
+    char a[20];         //姓名
+    char b;             //性别
+    char c[20];          //电话 学生证件号
+    char d[20];         //e—mail 专业
+    char e[20];         //城市 班级
+    int f;         //成绩
+    struct chen *next;
+};
+
+struct chen*create(int n)    //输入
+{
+    int j=0;
+    chen *p1,*p2,*head;
+    p1=p2=head=(struct chen*)malloc(vivo);
+    while(j<n)
+    {
+        p1=p2;
+        p2=(struct chen*)malloc(vivo);
+        cin>>p1->a;
+        cin>>p1->b;
+        cin>>p1->c;
+        cin>>p1->d;
+        cin>>p1->e;
+        cin>>p1->f;
+        p1->next=p2;
+        j++;
+    }
+    p1->next=NULL;
+    return head;
+};
+
+struct chen*xiugai(chen *p)   //输入姓名修改
+{
+    chen *head;
+    head=p;
+    char a[20];
+    int x;
+    cin>>a;
+    while(p)
+    {
+        x=strcmp(a,p->a);
+        if(x==0)break;
+        p=p->next;
+    }
+    cin>>p->b;
+    cin>>p->c;
+    cin>>p->d;
+    cin>>p->e;
+    cin>>p->f;
+    return head;
+};
+struct chen *xiugai1(chen *p)   //输入学号修改
+{
+    chen *head;
+    head=p;
+    char a[20];
+    int x;
+    cin>>a;
+    while(p)
+    {
+        x=strcmp(a,p->c);
+        if(x==0)break;
+        p=p->next;
+    }
+    cin>>p->a;
+    cin>>p->b;
+    cin>>p->d;
+    cin>>p->e;
+    cin>>p->f;
+    return head;
+};
+struct chen *shanchu(chen *p)  //输入姓名删除
+{
+    int b;
+    chen *head;
+    head=p;
+    char a[20];
+    cin>>a;
+    if(strcmp(p->a,a)==0)
+    {
+        return p->next;
+    }
+      while(p)
+    {
+        b=strcmp(a,p->next->a);
+        if(b==0)break;
+        p=p->next;
+    }
+    p->next=p->next->next;
+    return head;
+};
+struct chen *shanchu1(chen *p)     //输入学号删除
+{
+    int b;
+    chen *head;
+    head=p;
+    char a[20];
+    cin>>a;
+    if(strcmp(p->c,a)==0)
+    {
+        return p->next;
+    }
+      while(p)
+    {
+        b=strcmp(a,p->next->c);
+        if(b==0)break;
+        p=p->next;
+    }
+    p->next=p->next->next;
+    return head;
+};
+void chaxun1(chen *p)   //姓名查询
+{
+    int i,c,d=0;
+    char a[20];
+    cin>>a;
+    c=strlen(a);
+    while(p)
+    {
+        for(i=0;i<c;i++)
+        {
+            if(a[i]==p->a[i])
+            {
+                d++;
+            }
+        }
+        if(d==c)
+              cout<<p->a<<" "<<p->b<<" "<<p->c<<" "<<p->d<<" "<<p->e<<" "<<p->f<<endl;
+        p=p->next;
+        d=0;
+    }
+}
+void chaxun2(chen *p)    //学号查询
+{
+    int b;
+    char a[20];
+    cin>>a;
+    while(p)
+    {
+        b=strcmp(a,p->c);
+        if(b==0)
+        {
+            cout<<p->a<<" "<<p->b<<" "<<p->c<<" "<<p->d<<" "<<p->e<<" "<<p->f<<endl;
+        }
+        p=p->next;
+    }
+}
+struct chen *line(chen *p)  //排序
+{
+    chen *head,*p1,*p2,*p3,*q,*x,*y;
+    q=p;
+    head=NULL;
+    p3=p;
+    while((p->next->next)!=head)    //交换节点
+    {
+        p1=p;
+        p2=p->next;
+        while(p2->next!=head)
+        {
+            if((p2->f)>(p2->next->f))
+            {
+                p1->next=p2->next;
+                p2->next=p2->next->next;
+                p1->next->next=p2;
+                p2=p1->next;
+            }
+            p1=p1->next;
+            p2=p2->next;
+        }
+        head=p2;
+    }
+    q=p3->next;
+    y=q;
+    while(q)
+    {
+    if(p3->f<q->f)
+        return p3;
+    if((p3->f>q->f)&&(p3->f<q->next->f))
+    {
+        x=q->next;
+        q->next=p3;
+        p3->next=x;break;
+    }
+    if(q->next==NULL)
+    {
+        q->next=p3;
+    }
+    q=q->next;
+    }
+    return y;
+};
+void panduan(chen *p)     //判断成绩是否合格
+{
+    int a=0,i=0;
+    float b;
+    chen *x,*y;
+    y=x=p;
+    cout<<"不合格："<<endl;
+    while(p)
+    {
+        if(p->f<60)
+            cout<<p->a<<" "<<p->b<<" "<<p->c<<" "<<p->d<<" "<<p->e<<" "<<p->f<<endl;
+        p=p->next;
+        i++;
+    }
+    cout<<"合格："<<endl;
+    while(x)
+    {
+        if(x->f>=60)
+            cout<<x->a<<" "<<x->b<<" "<<x->c<<" "<<x->d<<" "<<x->e<<" "<<x->f<<endl;
+        x=x->next;
+    }
+    while(y)
+    {
+        a=a+y->f;
+        y=y->next;
+    }
+    b=a/i;
+    printf("平均成绩为：%.2f\n",b);
+}
+int main()
+{
+    chen *p,*q,*x;
+    int n;
+    cin>>n;
+    p=create(n);          //输入
+    q=line(p);            //排序
+    x=q;
+    panduan(x);
+    int a,b,i;
+    cin>>i;
+    while(i>0)
+    {
+        cin>>a;
+        cin>>b;
+        if(a==0)
+    {
+        if(b==1)               //输入姓名修改 a=0 b=1
+       {
+        p=xiugai(q);
+        while(p)
+        {
+            cout<<p->a<<" "<<p->b<<" "<<p->c<<" "<<p->d<<" "<<p->e<<" "<<p->f<<endl;
+            p=p->next;
+        }
+       }
+       if(b==2)                //输入姓名删除 a=0 b=2
+       {
+           p=shanchu(q);
+         while(p)
+        {
+            cout<<p->a<<" "<<p->b<<" "<<p->c<<" "<<p->d<<" "<<p->e<<" "<<p->f<<endl;
+            p=p->next;
+        }
+       }
+       if(b==0)                 //输入姓名查询   a=0 b=0
+       {
+           chaxun1(q);
+       }
+    }
+
+    if(a==1)
+    {
+         if(b==1)               //输入学号修改 a=1 b=1
+       {
+        p=xiugai1(q);
+        while(p)
+        {
+            cout<<p->a<<" "<<p->b<<" "<<p->c<<" "<<p->d<<" "<<p->e<<" "<<p->f<<endl;
+            p=p->next;
+        }
+       }
+       if(b==2)                //输入学号删除 a=1 b=2
+       {
+           p=shanchu1(q);
+         while(p)
+        {
+            cout<<p->a<<" "<<p->b<<" "<<p->c<<" "<<p->d<<" "<<p->e<<" "<<p->f<<endl;
+            p=p->next;
+        }
+       }
+       if(b==0)                 //输入学号查询   a=1 b=0
+       {
+           chaxun2(q);
+       }
+    }
+    cin>>i;
+    }
+    return 0;
+}
